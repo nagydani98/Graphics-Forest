@@ -18,7 +18,7 @@ void display()
 
     glPushMatrix();
     set_view(&camera);
-    draw_scene(&scene, elapsed_time);
+    draw_scene(&scene);
     glPopMatrix();
 
     if (is_preview_visible) {

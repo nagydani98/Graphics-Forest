@@ -10,22 +10,19 @@
 #include <obj/draw.h>
 
 
-float posx = 0;
 
+Deer deer;
 
 void init_scene(Scene* scene)
 {
-    load_model(&(scene->cube), "res/cube.obj");
-	load_model(&(scene->bishop), "res/bishop.obj");
-	load_model(&(scene->p), "res/pawn.obj");
-	load_model(&(scene->king), "res/king.obj");
-	load_model(&(scene->rook), "res/rook.obj");
-	load_model(&(scene->knight), "res/knight.obj");
+    
     load_model(&(scene->deer), "res/deer.obj");
 	
     scene->texture_id = load_texture("res/forest.jpg"); 
     scene->texture_id2 = load_texture("res/lighttexture.png");
     scene->texture_id2 = load_texture("res/else.png");
+
+    initdeer(&deer);
 
     scene->material.ambient.red = 1.0;
     scene->material.ambient.green = 1.0;
@@ -82,78 +79,20 @@ void set_material(const Material* material)
     glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, &(material->shininess));
 }
 
-void draw_scene(const Scene* scene, double elapsed_time){
-    char test;
-    int random = 1;
-    int rndpos = 0;
-    Deer deer;
-
-    (deer.deermodel)=scene->deer;
-
-    srand(time(0));
+void draw_scene(const Scene* scene){
+    deer.deermodel=scene->deer;
+    draw_origin();
     set_material(&(scene->material));
     set_lighting();
-    draw_origin();
-    /*glPushMatrix();
-        glBindTexture(GL_TEXTURE_2D, scene->texture_id3);
-        //glTranslatef(0.0, 3.0, 0.0);
-	    glRotatef(90,1,0,0);
-        glScalef(0.6, 0.6, 0.6);
-	draw_model(&(scene->p));
-    glPopMatrix();
-    glPushMatrix();
-        glBindTexture(GL_TEXTURE_2D, scene->texture_id2);
-        glTranslatef(0.0, 5.0, 0.0);
-	    glRotatef(90,1,0,0);
-        glScalef(0.6, 0.6, 0.6);
-        draw_model(&(scene->king));
-    glPopMatrix();
-    glPushMatrix();
-        glBindTexture(GL_TEXTURE_2D, scene->texture_id2);
-        //glTranslatef(0.0, 0.0, 0.0);
-	    glRotatef(90,1,0,0);
-        glScalef(0.6, 0.6, 0.6);
-        draw_model(&(scene->bishop));
-    glPopMatrix();
-    glPushMatrix();
-        glBindTexture(GL_TEXTURE_2D, scene->texture_id3);
-        glTranslatef(13.0, 20.0, 0.0);
-	    glRotatef(90,1,0,0);
-        glScalef(0.6, 0.6, 0.6);
-        draw_model(&(scene->king));
-    glPopMatrix();
-    glPushMatrix();
-        glBindTexture(GL_TEXTURE_2D, scene->texture_id2);
-        glTranslatef(0.0, 30.0, 0.0);
-	    glRotatef(90,1,0,0);
-        glScalef(0.6, 0.6, 0.6);
-        draw_model(&(scene->rook));
-    glPopMatrix();*/
-	
-    if(posx > 30){
-        posx = 0;
-    }
-
-    random = rand();
-    /*glPushMatrix();
-        glBindTexture(GL_TEXTURE_2D, scene->texture_id2);       
-        //glTranslatef(accum, 0.0, 0.0);
-        glTranslatef(posx, 0.0, 0.0);
-	    glRotatef(90,1,0,0);
-        glRotatef(random,0,1,0);
-        glScalef(0.075, 0.075, 0.075);
-        draw_model(&(scene->deer));
-    glPopMatrix();*/
-
-    drawtest(&deer);
     
+
+    live(&deer);
+
     glBindTexture(GL_TEXTURE_2D, scene->texture_id);
     //glTranslatef(10.0, 30.0, 0.0);
 	glRotatef(90,1,0,0);
     glScalef(30.0, 0.003, 30.0);
-    draw_model(&(scene->cube));
-    posx+=0.0002;
-    posx*=1.01;
+    //draw_model(&(scene->cube));
 }
 
 /*void transform(){

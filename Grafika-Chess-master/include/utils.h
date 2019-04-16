@@ -39,5 +39,6 @@ typedef struct Material
  * Calculates radian from degree.
  */
 double degree_to_radian(double degree);
+double radian_to_degree(double degree);
 
 #endif /* UTILS_H */
