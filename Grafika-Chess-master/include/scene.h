@@ -3,6 +3,7 @@
 
 #include "camera.h"
 #include "texture.h"
+#include "modelobjects.h"
 
 #include <obj/model.h>
 
@@ -10,13 +11,7 @@ typedef struct Scene
 {
     Camera camera;
     Model cube;
-	Model p;
-    Model king;
-    Model queen;
-    Model knight;
-    Model rook;
-    Model bishop;
-    Model deer;
+    Deer deer[100];
     Material material;
     GLuint texture_id;
     GLuint texture_id2;

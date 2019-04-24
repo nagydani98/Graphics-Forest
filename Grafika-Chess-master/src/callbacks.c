@@ -1,5 +1,6 @@
 #include "callbacks.h"
 #include "ctype.h"
+#include "utils.h"
 
 #define VIEWPORT_RATIO (4.0 / 3.0)
 #define VIEWPORT_ASPECT 50.0
@@ -8,8 +9,6 @@ struct {
     int x;
     int y;
 } mouse_position;
-
-double elapsed_time;
 
 void display()
 {
@@ -139,11 +138,12 @@ void idle()
 {
     static int last_frame_time = 0;
     int current_time;
-    //double elapsed_time;
    
     current_time = glutGet(GLUT_ELAPSED_TIME);
     elapsed_time = (double)(current_time - last_frame_time) / 1000;
     last_frame_time = current_time;
+
+    //printf(" %.6f ", elapsed_time);
 
     update_camera(&camera, elapsed_time);
 

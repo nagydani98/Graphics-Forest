@@ -9,20 +9,23 @@
 #include <obj/load.h>
 #include <obj/draw.h>
 
-
-
-Deer deer;
-
 void init_scene(Scene* scene)
 {
+    int i = 0;
+    for(i = 0; i < 1; i++)
+    {
+        load_model(&(scene->deer[i].deermodel), "res/deer.obj");
+        load_model(&(scene->cube), "res/cube.obj");
+        initdeer(&(scene->deer[i]), i*2, i*2);
+    }
     
-    load_model(&(scene->deer), "res/deer.obj");
+    
 	
     scene->texture_id = load_texture("res/forest.jpg"); 
     scene->texture_id2 = load_texture("res/lighttexture.png");
-    scene->texture_id2 = load_texture("res/else.png");
+    scene->texture_id3 = load_texture("res/deertexture.jpg");
 
-    initdeer(&deer);
+    
 
     scene->material.ambient.red = 1.0;
     scene->material.ambient.green = 1.0;
@@ -80,19 +83,32 @@ void set_material(const Material* material)
 }
 
 void draw_scene(const Scene* scene){
-    deer.deermodel=scene->deer;
+    int i;
     draw_origin();
     set_material(&(scene->material));
     set_lighting();
     
-
-    live(&deer);
-
-    glBindTexture(GL_TEXTURE_2D, scene->texture_id);
-    //glTranslatef(10.0, 30.0, 0.0);
+    glPushMatrix(); 
+    glTranslatef(0.0, 0.0, 0.0);
 	glRotatef(90,1,0,0);
     glScalef(30.0, 0.003, 30.0);
-    //draw_model(&(scene->cube));
+    glBindTexture(GL_TEXTURE_2D, scene->texture_id);
+    draw_model(&(scene->cube));
+    glPopMatrix();
+
+    for (i = 0; i < 1; i++)
+    {
+        glPushMatrix(); 
+        if((scene->deer[i]).time_to_live > 0){
+        glBindTexture(GL_TEXTURE_2D, scene->texture_id3);
+        live(&(scene->deer[i]));
+        glPopMatrix();
+    }
+    }
+    
+    
+
+    
 }
 
 /*void transform(){

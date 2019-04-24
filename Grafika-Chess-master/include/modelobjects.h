@@ -2,7 +2,6 @@
 #define MODELOBJECTS_H
 
 #include <obj/model.h>
-#include "scene.h"
 
 typedef struct Deer
 {
@@ -26,11 +25,14 @@ typedef struct Deer
         double target_y;
         double incr_x;
         double incr_y;
+        //the time each deer has till its death, decremented in live() function
+        double time_to_live;
 } Deer;
 
 void drawdeer(Deer* deer);
 //performs setup operations
-void initdeer(Deer* deer);
+void initdeer(Deer* deer, double x, double y);
+void initdefaultdeer(Deer* deer);
 
 /*handles rotating the model into an angle at a constant speed 
 over multiple iterations, incrementing the angle
@@ -46,6 +48,13 @@ void move_towards_target(Deer* deer);
 
 void generate_rnd_target(Deer* deer);
 
+void calculate_target(Deer* deer, float newdirection, float newdistance);
+
+//checks wether the deer has moved outside the allowed perimeter
+void check_field_boundaries(Deer* deer);
+
 //this function directs all actions of a deer
 void live(Deer* deer);
+//all actions a deer performs, once its time_to_live reaches 0
+void destroydeer(Deer* deer);
 #endif // MODELOBJECTS_H

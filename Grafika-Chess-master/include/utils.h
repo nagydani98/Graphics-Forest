@@ -41,4 +41,9 @@ typedef struct Material
 double degree_to_radian(double degree);
 double radian_to_degree(double degree);
 
+/**
+ * Utility variable, keeps track of time, updated in callbacks
+ */
+
+double elapsed_time;
 #endif /* UTILS_H */
