@@ -54,9 +54,9 @@ void rotateinto(Deer* deer){
     glTranslatef(deer->x, deer->y, 0.0);
     
     if(((deer->angle_increments != 0) && (deer->current_direction != deer->target_direction))){
-        deer->current_direction+=deer->angle_increments;
+        deer->current_direction+=deer->angle_increments*elapsed_time;
     } 
-    if ((fabs(deer->target_direction - deer->current_direction + 0.0001) < fabs(deer->angle_increments))) {
+    if ((fabs(deer->target_direction - deer->current_direction + 0.0001) < fabs(deer->angle_increments)*elapsed_time)) {
         deer->current_direction = deer->target_direction;
         deer->is_rotating = 0;
         deer->is_moving = 1;
@@ -108,8 +108,8 @@ void generate_rnd_target(Deer* deer){
 
 void calculate_target(Deer* deer, float newdirection, float newdistance){
     deer->target_direction = newdirection;
-    deer->target_x = cos(deer->target_direction) * newdistance;
-    deer->target_y = sin(deer->target_direction) * newdistance;
+    deer->target_x = cos(deer->target_direction) * newdistance + deer->x;
+    deer->target_y = sin(deer->target_direction) * newdistance + deer->y;
 }
 
 void set_xy_increment(Deer* deer){
@@ -126,7 +126,7 @@ void set_xy_increment(Deer* deer){
 
 float calculate_angle_increment(Deer* deer){
     float increment = 1;
-        increment = (deer->target_direction - deer->current_direction) / 500;
+        increment = (deer->target_direction - deer->current_direction) / 2;
     return increment;
 }
 
