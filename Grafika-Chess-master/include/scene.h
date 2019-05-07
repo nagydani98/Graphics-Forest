@@ -12,10 +12,14 @@ typedef struct Scene
     Camera camera;
     Model cube;
     Deer deer[100];
+    Model skybox;
     Material material;
     GLuint texture_id;
     GLuint texture_id2;
     GLuint texture_id3;
+    GLuint texture_id4;
+    GLuint sky_tex;
+    int num_of_deer;
 } Scene;
 
 /**

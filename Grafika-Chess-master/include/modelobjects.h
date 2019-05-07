@@ -29,6 +29,10 @@ typedef struct Deer
         double time_to_live;
 } Deer;
 
+typedef struct BoundingBox{
+        
+} BoundingBox;
+
 void drawdeer(Deer* deer);
 //performs setup operations
 void initdeer(Deer* deer, double x, double y);

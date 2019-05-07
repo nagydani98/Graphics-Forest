@@ -108,8 +108,10 @@ void keyboard(unsigned char key, int x, int y)
             is_preview_visible = TRUE;
         }
         break;
+    case 27:
+        exit(0);
+        break;
     }
-
     glutPostRedisplay();
 }
 

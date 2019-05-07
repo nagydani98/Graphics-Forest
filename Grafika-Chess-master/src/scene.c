@@ -12,18 +12,24 @@
 void init_scene(Scene* scene)
 {
     int i = 0;
-    for(i = 0; i < 1; i++)
+    scene->num_of_deer = 7;
+    for(i = 0; i < scene->num_of_deer; i++)
     {
         load_model(&(scene->deer[i].deermodel), "res/deer.obj");
-        load_model(&(scene->cube), "res/cube.obj");
+        
         initdeer(&(scene->deer[i]), i*2, i*2);
     }
+
+    load_model(&(scene->cube), "res/cube.obj");
+    load_model(&(scene->skybox), "res/box.obj");
     
     
 	
-    scene->texture_id = load_texture("res/forest.jpg"); 
+    scene->texture_id = load_texture("res/grass.jpg"); 
     scene->texture_id2 = load_texture("res/lighttexture.png");
     scene->texture_id3 = load_texture("res/deertexture.jpg");
+    scene->texture_id4 = load_texture("res/dead.png");
+    scene->sky_tex = load_texture("res/skybox.png");
 
     
 
@@ -96,19 +102,35 @@ void draw_scene(const Scene* scene){
     draw_model(&(scene->cube));
     glPopMatrix();
 
-    for (i = 0; i < 1; i++)
+    draw_skybox(scene);
+
+    for (i = 0; i < scene->num_of_deer; i++)
     {
         glPushMatrix(); 
         if((scene->deer[i]).time_to_live > 0){
-        glBindTexture(GL_TEXTURE_2D, scene->texture_id3);
-        live(&(scene->deer[i]));
+            glBindTexture(GL_TEXTURE_2D, scene->texture_id3);
+            live(&(scene->deer[i]));
+        }
+        else {
+            glBindTexture(GL_TEXTURE_2D, scene->texture_id4);
+            live(&(scene->deer[i]));
+        }
         glPopMatrix();
-    }
     }
     
     
 
     
+}
+
+void draw_skybox(Scene* scene){
+    glPushMatrix();
+        glBindTexture(GL_TEXTURE_2D, scene->sky_tex);
+        //glTranslatef(1.0, 0.0, 0.0);
+        //glTranslatef(0.0, 1.0, 0.0);
+        glScalef(100, 100, 100);
+	    draw_model(&(scene->skybox));
+    glPopMatrix();
 }
 
 /*void transform(){
