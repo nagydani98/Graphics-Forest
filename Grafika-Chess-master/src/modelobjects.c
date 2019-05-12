@@ -177,7 +177,7 @@ void live(Deer* deer){
 
 void destroydeer(Deer* deer){
         if(deer->z >= -20){ 
-            deer->z+= -0.01;
+            deer->z+= -elapsed_time*10;
         }
 }
 
@@ -209,6 +209,10 @@ void check_field_boundaries(Deer* deer){
         deer->is_rotating = 0;
         deer->y = deer->y + boundary_setback;
     }
+}
+
+void setspeed(Deer* deer, double speed){
+    deer->speed = speed;
 }
 
 

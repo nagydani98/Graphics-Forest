@@ -108,6 +108,18 @@ void keyboard(unsigned char key, int x, int y)
             is_preview_visible = TRUE;
         }
         break;
+    case 'r':
+        if(!scene.are_deers_stopped){
+            scene.are_deers_stopped = 1;
+        }
+        else scene.are_deers_stopped = 0;
+        break;
+    case 'n':
+        scene.light_strength+=0.5;
+        break;
+    case 'm':
+        scene.light_strength-=0.5;
+        break;
     case 27:
         exit(0);
         break;

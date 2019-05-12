@@ -5,14 +5,17 @@
 #include <time.h>
 
 #include <GL/glut.h>
+#include <GL/gl.h>
 
 #include <obj/load.h>
 #include <obj/draw.h>
 
 void init_scene(Scene* scene)
 {
+    scene->are_deers_stopped = 0;
+    scene->light_strength = 1;
     int i = 0;
-    scene->num_of_deer = 7;
+    scene->num_of_deer = 4;
     for(i = 0; i < scene->num_of_deer; i++)
     {
         load_model(&(scene->deer[i].deermodel), "res/deer.obj");
@@ -21,7 +24,7 @@ void init_scene(Scene* scene)
     }
 
     load_model(&(scene->cube), "res/cube.obj");
-    load_model(&(scene->skybox), "res/box.obj");
+    load_model(&(scene->skybox), "res/compatiblebox.obj");
     
     
 	
@@ -29,7 +32,7 @@ void init_scene(Scene* scene)
     scene->texture_id2 = load_texture("res/lighttexture.png");
     scene->texture_id3 = load_texture("res/deertexture.jpg");
     scene->texture_id4 = load_texture("res/dead.png");
-    scene->sky_tex = load_texture("res/skybox.png");
+    scene->sky_tex = load_texture("res/forestbox.jpg");
 
     
 
@@ -48,12 +51,19 @@ void init_scene(Scene* scene)
     scene->material.shininess = 0.0;
 }
 
-void set_lighting()
+void set_lighting(double light_strength)
 {
+    int i;
     float ambient_light[] = { 0.5f, 0.5f, 0.5f, 1.0f };
     float diffuse_light[] = { 0.5f, 0.5f, 0.5f, 1.0f };
     float specular_light[] = { 5.0f, 5.0f, 5.0f, 1.0f };
     float position[] = { 10.0f, 10.0f, 20.0f, 1.0f };
+
+    for(i = 0; i < 3; i++){
+        ambient_light[i]*=light_strength;
+        diffuse_light[i]*=light_strength;
+        specular_light[i]*=light_strength;
+    }
 
     glLightfv(GL_LIGHT0, GL_AMBIENT, ambient_light);
     glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse_light);
@@ -92,7 +102,7 @@ void draw_scene(const Scene* scene){
     int i;
     draw_origin();
     set_material(&(scene->material));
-    set_lighting();
+    set_lighting(scene->light_strength);
     
     glPushMatrix(); 
     glTranslatef(0.0, 0.0, 0.0);
@@ -116,6 +126,10 @@ void draw_scene(const Scene* scene){
             live(&(scene->deer[i]));
         }
         glPopMatrix();
+        if(scene->are_deers_stopped == 1){
+            setspeed(&(scene->deer[i]), 0);
+        }
+        else setspeed(&(scene->deer[i]), 1);
     }
     
     

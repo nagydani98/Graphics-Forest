@@ -61,4 +61,6 @@ void check_field_boundaries(Deer* deer);
 void live(Deer* deer);
 //all actions a deer performs, once its time_to_live reaches 0
 void destroydeer(Deer* deer);
+
+void setspeed(Deer* deer, double speed);
 #endif // MODELOBJECTS_H

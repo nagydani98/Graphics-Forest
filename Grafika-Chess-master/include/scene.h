@@ -20,6 +20,8 @@ typedef struct Scene
     GLuint texture_id4;
     GLuint sky_tex;
     int num_of_deer;
+    int are_deers_stopped;
+    double light_strength;
 } Scene;
 
 /**
