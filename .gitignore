@@ -4,7 +4,6 @@
 # Object files
 *.o
 *.ko
-*.obj
 *.elf
 
 # Linker output
@@ -30,7 +29,6 @@
 *.obj
 
 # Executables
-*.exe
 *.out
 *.app
 *.i*86

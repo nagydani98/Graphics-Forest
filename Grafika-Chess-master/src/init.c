@@ -19,6 +19,7 @@ void init_opengl()
     glClearDepth(1.0);
 
     glEnable(GL_TEXTURE_2D);
+    glEnable(0x8513);
 
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);

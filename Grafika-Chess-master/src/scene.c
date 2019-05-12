@@ -5,10 +5,10 @@
 #include <time.h>
 
 #include <GL/glut.h>
-#include <GL/gl.h>
 
 #include <obj/load.h>
 #include <obj/draw.h>
+#include <obj/model.h>
 
 void init_scene(Scene* scene)
 {
@@ -32,7 +32,7 @@ void init_scene(Scene* scene)
     scene->texture_id2 = load_texture("res/lighttexture.png");
     scene->texture_id3 = load_texture("res/deertexture.jpg");
     scene->texture_id4 = load_texture("res/dead.png");
-    scene->sky_tex = load_texture("res/forestbox.jpg");
+    scene->sky_tex = load_texture("res/skybox2.png");
 
     
 
@@ -138,6 +138,24 @@ void draw_scene(const Scene* scene){
 }
 
 void draw_skybox(Scene* scene){
+    /*double boxcoordsx[] = {10, 10, -10, -10, 10, 10, -10, -10};
+    double boxcoordsy[] = {10, -10, -10, 10, 10, -10, -10, 10};
+    double boxcoordsz[] = {10, 10, 10, 10, -10, -10, -10, -10};
+
+    double facex[][3] = {{10, 10, 10}, {10, 10, -10,}, {10, -10, 10}, {10, -10, -10}};
+    double facey[][3] = {{10, 10, 10}, {10, 10, -10,}, {-10, 10, 10}, {-10, 10, -10}};
+    double facez[][3] = {{10, 10, 10}, {10, -10, 10,}, {-10, 10, 10}, {-10, -10, 10}};
+
+    glPushMatrix();
+        glBindTexture(GL_TEXTURE_2D, scene->sky_tex);
+        glBegin(GL_POLYGON);
+        glVertex3d(facex[0][0], facex[0][1], facex[0][2]);
+        glVertex3d(facex[1][0], facex[1][1], facex[1][2]);
+        glVertex3d(facex[2][0], facex[2][1], facex[2][2]);
+        glVertex3d(facex[3][0], facex[3][1], facex[3][2]);
+        glEnd();
+    glPopMatrix();*/
+
     glPushMatrix();
         glBindTexture(GL_TEXTURE_2D, scene->sky_tex);
         //glTranslatef(1.0, 0.0, 0.0);
@@ -205,4 +223,102 @@ static void myShadowMatrix(float ground[4], float light[4])
     shadowMat[3][3] = dot - light[3] * ground[3];
 
     glMultMatrixf((const GLfloat*)shadowMat);
+}
+
+void draw_skybox_bottom(Scene* scene)
+{
+    double theta, phi1, phi2;
+    double x1, y1, z1;
+    double x2, y2, z2;
+    double u, v1, v2;
+
+    int n_slices, n_stacks;
+    double radius;
+    int i, k;
+
+    n_slices = 36;
+    n_stacks = 18;
+    radius = 10000.0;
+
+    glPushMatrix();
+    glBindTexture(GL_TEXTURE_2D, scene->sky_tex);
+    glScaled(radius, radius, radius);
+
+    glColor3f(1, 1, 1);
+
+	glBegin(GL_TRIANGLE_STRIP);
+
+    for (i = 0; i < n_stacks; ++i) {
+        v1 = (double)i / n_stacks;
+        v2 = (double)(i + 1) / n_stacks;
+        phi1 = v1 * M_PI / 2.0;
+        phi2 = v2 * M_PI / 2.0;
+        for (k = 0; k <= n_slices; ++k) {
+            u = (double)k / n_slices;
+            theta = u * 2.0 * M_PI;
+            x1 = cos(theta) * cos(phi1);
+            y1 = sin(theta) * cos(phi1);
+            z1 = sin(phi1);
+            x2 = cos(theta) * cos(phi2);
+            y2 = sin(theta) * cos(phi2);
+            z2 = sin(phi2);
+            glTexCoord2d(u, 1.0 - v1);
+            glVertex3d(x1, y1, -z1);
+            glTexCoord2d(u, 1.0 - v2);
+            glVertex3d(x2, y2, -z2);
+        }
+    }
+
+    glEnd();
+    glPopMatrix();
+}
+
+
+
+void draw_skybox_top(Scene* scene)
+{
+    double theta, phi1, phi2;
+    double x1, y1, z1;
+    double x2, y2, z2;
+    double u, v1, v2;
+
+    int n_slices, n_stacks;
+    double radius;
+    int i, k;
+
+    n_slices = 36;
+    n_stacks = 18;
+    radius = 10000.0;
+
+    glPushMatrix();
+    glBindTexture(GL_TEXTURE_2D, scene->sky_tex);
+    glScaled(radius, radius, radius);
+
+    glColor3f(1, 1, 1);
+
+	glBegin(GL_TRIANGLE_STRIP);
+
+    for (i = 0; i < n_stacks; ++i) {
+        v1 = (double)i / n_stacks;
+        v2 = (double)(i + 1) / n_stacks;
+        phi1 = v1 * M_PI / 2.0;
+        phi2 = v2 * M_PI / 2.0;
+        for (k = 0; k <= n_slices; ++k) {
+            u = (double)k / n_slices;
+            theta = u * 2.0 * M_PI;
+            x1 = cos(theta) * cos(phi1);
+            y1 = sin(theta) * cos(phi1);
+            z1 = sin(phi1);
+            x2 = cos(theta) * cos(phi2);
+            y2 = sin(theta) * cos(phi2);
+            z2 = sin(phi2);
+            glTexCoord2d(u, 1.0 - v1);
+            glVertex3d(x1, y1, z1);
+            glTexCoord2d(u, 1.0 - v2);
+            glVertex3d(x2, y2, z2);
+        }
+    }
+
+    glEnd();
+    glPopMatrix();
 }
