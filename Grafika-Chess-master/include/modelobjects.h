@@ -27,11 +27,9 @@ typedef struct Deer
         double incr_y;
         //the time each deer has till its death, decremented in live() function
         double time_to_live;
+        //bounding radius is the distance at which two deers count as touching
+        double bounding_radius;
 } Deer;
-
-typedef struct BoundingBox{
-        
-} BoundingBox;
 
 void drawdeer(Deer* deer);
 //performs setup operations
@@ -63,4 +61,9 @@ void live(Deer* deer);
 void destroydeer(Deer* deer);
 
 void setspeed(Deer* deer, double speed);
+
+//detects collision by calculating distance between each deer
+void detect_collisions(Deer deer[], int number_of_deer);
+//resolves the collision between two deers
+void resolve_collision(Deer deer[], int index_i, int index_j);
 #endif // MODELOBJECTS_H

@@ -34,6 +34,7 @@ void initdefaultdeer(Deer* deer){
     deer->y = 0;
     deer->z = 0;
     deer->time_to_live = 50000;
+    deer->bounding_radius = 0.5;
 
     pcg32_srandom_r(&rng, time(NULL) ^ (intptr_t)&printf, (intptr_t)&help);
 }
@@ -47,7 +48,8 @@ void initdeer(Deer* deer, double x, double y){
     deer->x = x;
     deer->y = y;
     deer->z = 0;
-    deer->time_to_live = 20;
+    deer->time_to_live = 20000;
+    deer->bounding_radius = 0.5;
 
     pcg32_srandom_r(&rng, time(NULL) ^ (intptr_t)&printf, (intptr_t)&help);
 }
@@ -215,6 +217,38 @@ void setspeed(Deer* deer, double speed){
     deer->speed = speed;
 }
 
+void detect_collisions(Deer deer[], int number_of_deer){
+    int i, j;
+    double distancex, distancey, distance;
+    for(i = 0; i < number_of_deer; i++){
+        if(deer[i].time_to_live > 0){
+            for(j = i + 1; j < number_of_deer; j++){
+                if(deer[j].time_to_live > 0){
+                   distancex = deer[i].x - deer[j].x;
+                   distancey = deer[i].y - deer[j].y;
+                   distance = sqrt(distancex*distancex + distancey*distancey);
+                   if(distance <= (deer[i].bounding_radius + deer[j].bounding_radius)){
+                       resolve_collision(deer, i, j);
+                   }
+                }
+            }
+        }
+    }
+}
+
+void resolve_collision(Deer deer[], int index_i, int index_j){
+    deer[index_i].is_moving = 0;
+    deer[index_i].is_rotating = 0;
+    calculate_target(&deer[index_i], deer[index_i].target_direction + M_PI, 0.1);
+    deer[index_i].x = deer[index_i].target_x;
+    deer[index_i].y = deer[index_i].target_y;
+
+    deer[index_j].is_moving = 0;
+    deer[index_j].is_rotating = 0;
+    calculate_target(&deer[index_j], deer[index_j].target_direction + M_PI, 0.1);
+    deer[index_j].x = deer[index_j].target_x;
+    deer[index_j].y = deer[index_j].target_y;
+}
 
 
 

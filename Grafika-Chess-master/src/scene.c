@@ -15,7 +15,7 @@ void init_scene(Scene* scene)
     scene->are_deers_stopped = 0;
     scene->light_strength = 1;
     int i = 0;
-    scene->num_of_deer = 4;
+    scene->num_of_deer = 8;
     for(i = 0; i < scene->num_of_deer; i++)
     {
         load_model(&(scene->deer[i].deermodel), "res/deer.obj");
@@ -131,6 +131,7 @@ void draw_scene(const Scene* scene){
         }
         else setspeed(&(scene->deer[i]), 1);
     }
+    detect_collisions(scene->deer, scene->num_of_deer);
     
     
 
