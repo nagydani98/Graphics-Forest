@@ -100,7 +100,7 @@ void keyboard(unsigned char key, int x, int y)
 	case 'q':
         set_camera_vertical_speed(&camera, -1);
         break;
-    case 1:
+    case 't':
         if (is_help_visible) {
             is_help_visible = FALSE;
         }
