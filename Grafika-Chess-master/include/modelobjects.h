@@ -6,6 +6,7 @@
 typedef struct Deer
 {
         Model deermodel;
+        double model_scale;
         double x;
         double y;
         double z;
@@ -29,6 +30,13 @@ typedef struct Deer
         double time_to_live;
         //bounding radius is the distance at which two deers count as touching
         double bounding_radius;
+        
+        //mating time is set to 300 every time a deer mates
+        //if two deer collide with < 0 mating time, they mate
+        double mating_timer;
+
+        //measures the time of a deer's young years
+        double youngling_timer;
 } Deer;
 
 void drawdeer(Deer* deer);
@@ -66,4 +74,10 @@ void setspeed(Deer* deer, double speed);
 void detect_collisions(Deer deer[], int number_of_deer);
 //resolves the collision between two deers
 void resolve_collision(Deer deer[], int index_i, int index_j);
+
+//checks if both deer's mating_timer is equal or below zero, then
+//if it is, they mate
+void mate(Deer deer[], int index_i, int index_j);
+//spawns and creates a new deer at xy coords
+void spawn_new_deer(Deer deer[], double x, double y);
 #endif // MODELOBJECTS_H

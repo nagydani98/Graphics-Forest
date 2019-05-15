@@ -18,28 +18,14 @@ pcg32_random_t rng;
 void drawdeer(Deer* deer){
     glPushMatrix();     
 	    glRotatef(90,1,0,0);
-        glScalef(0.075, 0.075, 0.075);
+        glScalef(deer->model_scale, deer->model_scale, deer->model_scale);
         glTranslatef(deer->x, deer->z, deer->y);
         draw_model(&(deer->deermodel));
     glPopMatrix();
 }
 
-void initdefaultdeer(Deer* deer){
-    int help = 0;
-    deer->speed = 1;
-    deer->is_rotating = 0;
-    deer->is_moving = 0;
-    deer->current_direction = 0;
-    deer->x = 0;
-    deer->y = 0;
-    deer->z = 0;
-    deer->time_to_live = 50000;
-    deer->bounding_radius = 0.5;
-
-    pcg32_srandom_r(&rng, time(NULL) ^ (intptr_t)&printf, (intptr_t)&help);
-}
-
 void initdeer(Deer* deer, double x, double y){
+    
     int help = 0;
     deer->speed = 1;
     deer->is_rotating = 0;
@@ -48,10 +34,20 @@ void initdeer(Deer* deer, double x, double y){
     deer->x = x;
     deer->y = y;
     deer->z = 0;
-    deer->time_to_live = 20000;
+    
     deer->bounding_radius = 0.5;
+    deer->mating_timer = 0;
+    deer->model_scale = 0.075;
+    deer->youngling_timer = 0;
 
-    pcg32_srandom_r(&rng, time(NULL) ^ (intptr_t)&printf, (intptr_t)&help);
+    pcg32_srandom_r(&rng, time(NULL) ^ (intptr_t)&printf, (intptr_t)&deer);
+    deer->time_to_live = (int)pcg32_boundedrand_r(&rng, 100) + 40;
+
+    
+}
+
+void initdefaultdeer(Deer* deer){
+    initdeer(deer, 0, 0);
 }
 
 void rotateinto(Deer* deer){ 
@@ -59,7 +55,7 @@ void rotateinto(Deer* deer){
     
     if(deer->time_to_live >=0){
         if(((deer->angle_increments != 0) && (deer->current_direction != deer->target_direction))){
-         deer->current_direction+=deer->angle_increments*elapsed_time;
+         deer->current_direction+=deer->angle_increments*elapsed_time*(deer->speed);
         } 
         if ((fabs(deer->target_direction - deer->current_direction + 0.0001) < fabs(deer->angle_increments)*elapsed_time)) {
             deer->current_direction = deer->target_direction;
@@ -171,7 +167,12 @@ void live(Deer* deer){
         }
         drawdeer(deer);
         check_field_boundaries(deer);
-        deer->time_to_live = deer->time_to_live -  elapsed_time;
+            deer->time_to_live = deer->time_to_live -  elapsed_time;
+            deer->mating_timer = deer->mating_timer - elapsed_time;
+            deer->youngling_timer = deer->youngling_timer - elapsed_time;
+        if(deer->youngling_timer <= 0){
+            deer->model_scale = 0.075;
+        }
     }
 
 
@@ -184,7 +185,7 @@ void destroydeer(Deer* deer){
 }
 
 void check_field_boundaries(Deer* deer){
-    int distance_limit = 10;
+    int distance_limit = 30;
 
     /*deer's current position that's over the limit is reduced
     by this setback, so that the next time we check if it is
@@ -248,7 +249,36 @@ void resolve_collision(Deer deer[], int index_i, int index_j){
     calculate_target(&deer[index_j], deer[index_j].target_direction + M_PI, 0.1);
     deer[index_j].x = deer[index_j].target_x;
     deer[index_j].y = deer[index_j].target_y;
+
+    printf("\n%d and %d collided!\n", index_i, index_j);
+    
+    //mate(deer, index_i, index_j);
+    
 }
 
+void mate(Deer deer[], int index_i, int index_j){
+    if((deer[index_i].mating_timer <= 0) && (deer[index_j].mating_timer <= 0)){
+        deer[index_i].mating_timer = 100;
+        deer[index_j].mating_timer = 100;
+        double spawn_x = (deer[index_i].x - deer[index_j].x) / 2;
+        double spawn_y = (deer[index_i].y - deer[index_j].y) / 2;
+        spawn_new_deer(deer, spawn_x, spawn_y);
+        printf("\n%d and %d mated!\n", index_i, index_j);
+    }
+}
+
+void spawn_new_deer(Deer deer[], double x, double y){
+    int i;
+    
+    for(i = 0; i < 100; i++){
+        if(deer[i].time_to_live <=100){
+            initdeer(&(deer[i]), x, y);
+            deer[i].model_scale = 0.0375;
+            deer[i].youngling_timer = 80;
+            deer[i].bounding_radius = 0.25;
+            return;
+        }
+    }
+}
 
 

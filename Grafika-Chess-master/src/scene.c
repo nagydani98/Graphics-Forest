@@ -16,6 +16,12 @@ void init_scene(Scene* scene)
     scene->light_strength = 1;
     int i = 0;
     scene->num_of_deer = 8;
+
+    for(i = 0; i < 100; i++)
+    {
+        scene->deer[i].time_to_live = 0;
+    }
+
     for(i = 0; i < scene->num_of_deer; i++)
     {
         load_model(&(scene->deer[i].deermodel), "res/deer.obj");
@@ -107,14 +113,14 @@ void draw_scene(const Scene* scene){
     glPushMatrix(); 
     glTranslatef(0.0, 0.0, 0.0);
 	glRotatef(90,1,0,0);
-    glScalef(30.0, 0.003, 30.0);
+    glScalef(80.0, 0.003, 80.0);
     glBindTexture(GL_TEXTURE_2D, scene->texture_id);
     draw_model(&(scene->cube));
     glPopMatrix();
 
     draw_skybox(scene);
 
-    for (i = 0; i < scene->num_of_deer; i++)
+    for (i = 0; i < 100; i++)
     {
         glPushMatrix(); 
         if((scene->deer[i]).time_to_live > 0){
@@ -161,7 +167,7 @@ void draw_skybox(Scene* scene){
         glBindTexture(GL_TEXTURE_2D, scene->sky_tex);
         //glTranslatef(1.0, 0.0, 0.0);
         //glTranslatef(0.0, 1.0, 0.0);
-        glScalef(100, 100, 100);
+        glScalef(80, 80, 80);
 	    draw_model(&(scene->skybox));
     glPopMatrix();
 }

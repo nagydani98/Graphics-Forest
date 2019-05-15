@@ -20,8 +20,8 @@ void display()
     draw_scene(&scene);
     glPopMatrix();
 
-    if (is_preview_visible) {
-        show_texture_preview();
+    if (is_help_visible) {
+        show_help();
     }
 
     glutSwapBuffers();
@@ -100,12 +100,12 @@ void keyboard(unsigned char key, int x, int y)
 	case 'q':
         set_camera_vertical_speed(&camera, -1);
         break;
-    case 't':
-        if (is_preview_visible) {
-            is_preview_visible = FALSE;
+    case 1:
+        if (is_help_visible) {
+            is_help_visible = FALSE;
         }
         else {
-            is_preview_visible = TRUE;
+            is_help_visible = TRUE;
         }
         break;
     case 'r':
@@ -114,18 +114,20 @@ void keyboard(unsigned char key, int x, int y)
         }
         else scene.are_deers_stopped = 0;
         break;
-    case 'n':
+    case '+':
         scene.light_strength+=0.5;
         break;
-    case 'm':
+    case '-':
         scene.light_strength-=0.5;
         break;
     case 27:
         exit(0);
         break;
     }
+    
     glutPostRedisplay();
 }
+
 
 void keyboard_up(unsigned char key, int x, int y)
 {
